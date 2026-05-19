@@ -32,7 +32,9 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
   useEffect(() => {
     if (phase !== "press-any") return;
     const mountedAt = performance.now();
+    let fired = false;
     function onKey(e: KeyboardEvent) {
+      if (fired) return;
       if (e.key === "Enter" && performance.now() - mountedAt < 150) return;
       if (
         e.key === "Enter" ||
@@ -41,6 +43,8 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
         e.key === "ArrowRight"
       ) {
         e.preventDefault();
+        fired = true;
+        window.removeEventListener("keydown", onKey);
         sound.play("key-enter");
         onComplete();
       }
