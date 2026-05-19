@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.log
+.DS_Store
+.vercel
+next-env.d.ts
+
+# E2E verification artifacts
+.playwright-mcp/
+e2e-success.png
+
+# Per-user Claude permissions (paths are local)
+.claude/settings.local.json
+
+# TS incremental build info
+tsconfig.tsbuildinfo

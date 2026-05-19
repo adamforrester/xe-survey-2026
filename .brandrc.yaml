@@ -1,0 +1,8 @@
+client: XE Survey Website
+tier: standard
+mode: standard
+deploy:
+  platform: netlify
+tools:
+  agent: claude-code
+extensions: []

@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: theme("colors.terminal.bg");
+  color: theme("colors.phosphor.DEFAULT");
+  font-family: theme("fontFamily.mono");
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+/* Phosphor glow on text — subtle bloom that reads like a CRT */
+.phosphor-glow {
+  text-shadow:
+    0 0 1px rgba(255, 176, 0, 0.6),
+    0 0 4px rgba(255, 176, 0, 0.35),
+    0 0 12px rgba(255, 176, 0, 0.15);
+}
+
+/* When CRT is off, drop the glow */
+.crt-off .phosphor-glow {
+  text-shadow: none;
+}
+
+/* Scanlines — a fixed overlay that doesn't capture pointer events */
+.crt-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+.crt-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 49;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+.crt-sweep {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 6vh;
+  pointer-events: none;
+  z-index: 48;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 176, 0, 0.04),
+    transparent
+  );
+}
+
+/* Hide scrollbar visually, keep it functional */
+.terminal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.terminal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: theme("colors.phosphor.dimmer");
+  border-radius: 3px;
+}
+
+/* Selection color */
+::selection {
+  background: theme("colors.phosphor.DEFAULT");
+  color: theme("colors.terminal.bg");
+}
+
+/* Inputs */
+input,
+textarea {
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  border: none;
+  outline: none;
+  caret-color: transparent; /* we draw our own cursor */
+}
+
+/* Focus rings handled per-component, but kill the default for a11y custom paths */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 1px dashed theme("colors.phosphor.dim");
+  outline-offset: 2px;
+}
+
+/* Reduced motion: disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink,
+  .animate-scan,
+  .animate-flicker {
+    animation: none !important;
+  }
+}
