@@ -321,6 +321,7 @@ function RadioField({
             value={o.value}
             checked={value === o.value}
             onChange={() => onChange(o.value)}
+            className="mt-[5px] shrink-0"
           />
           <span>{o.label}</span>
         </label>
@@ -360,6 +361,7 @@ function CheckboxField({
                   onChange([...values, o.value]);
                 }
               }}
+              className="mt-[5px] shrink-0"
             />
             <span>
               {o.label}
@@ -392,21 +394,23 @@ function RatingFields({
       <legend className="text-phosphor-dim">{label}</legend>
       <div className="text-phosphor-dim text-xs">{legend}</div>
       {rows.map((row) => (
-        <div key={row.id} className="flex flex-wrap items-center gap-2">
+        <div key={row.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-1">
           <span className="flex-1 min-w-[200px]">{row.label}</span>
-          {[1, 2, 3, 4, 5].map((n) => (
-            <label key={n} className="flex items-center gap-1">
-              <input
-                type="radio"
-                name={`rating-${row.id}`}
-                checked={values[row.id] === n}
-                onChange={() => {
-                  onChange({ ...(values as Record<string, Rating>), [row.id]: n as Rating });
-                }}
-              />
-              <span>{n}</span>
-            </label>
-          ))}
+          <div className="flex items-center gap-x-4">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <label key={n} className="flex items-center gap-1.5">
+                <input
+                  type="radio"
+                  name={`rating-${row.id}`}
+                  checked={values[row.id] === n}
+                  onChange={() => {
+                    onChange({ ...(values as Record<string, Rating>), [row.id]: n as Rating });
+                  }}
+                />
+                <span>{n}</span>
+              </label>
+            ))}
+          </div>
         </div>
       ))}
     </fieldset>
