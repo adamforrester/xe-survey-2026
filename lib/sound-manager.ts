@@ -1,9 +1,7 @@
 "use client";
 
-// Sound manager — tries Howler-loaded MP3s in /sounds/ first, falls back to
-// Web Audio synthesis if a file is missing. Persists on/off pref in localStorage.
-
-import { Howl } from "howler";
+// Sound manager — Web Audio synthesis only. We ship no MP3s, so all sounds
+// are generated at runtime; pref persists in localStorage.
 
 type SoundKey =
   | "key-1"
@@ -15,33 +13,9 @@ type SoundKey =
   | "boot-chime"
   | "modem-sync";
 
-const FILES: Record<SoundKey, string> = {
-  "key-1": "/sounds/key-1.mp3",
-  "key-2": "/sounds/key-2.mp3",
-  "key-3": "/sounds/key-3.mp3",
-  "key-enter": "/sounds/key-enter.mp3",
-  "beep-section": "/sounds/beep-section.mp3",
-  "beep-error": "/sounds/beep-error.mp3",
-  "boot-chime": "/sounds/boot-chime.mp3",
-  "modem-sync": "/sounds/modem-sync.mp3",
-};
-
-const VOLUMES: Record<SoundKey, number> = {
-  "key-1": 0.18,
-  "key-2": 0.18,
-  "key-3": 0.18,
-  "key-enter": 0.25,
-  "beep-section": 0.3,
-  "beep-error": 0.4,
-  "boot-chime": 0.45,
-  "modem-sync": 0.5,
-};
-
 const SOUND_KEY_LS = "xe.sound";
 
 class SoundManager {
-  private cache = new Map<SoundKey, Howl>();
-  private fileMissing = new Set<SoundKey>();
   private audioContext: AudioContext | null = null;
   private _enabled = true;
   private _ready = false;
@@ -72,28 +46,7 @@ class SoundManager {
 
   play(key: SoundKey) {
     if (!this._enabled || typeof window === "undefined") return;
-    if (this.fileMissing.has(key)) {
-      this.synthesize(key);
-      return;
-    }
-    let howl = this.cache.get(key);
-    if (!howl) {
-      howl = new Howl({
-        src: [FILES[key]],
-        volume: VOLUMES[key],
-        preload: true,
-        onloaderror: () => {
-          this.fileMissing.add(key);
-        },
-      });
-      this.cache.set(key, howl);
-    }
-    try {
-      howl.play();
-    } catch {
-      this.fileMissing.add(key);
-      this.synthesize(key);
-    }
+    this.synthesize(key);
   }
 
   playKeystroke() {

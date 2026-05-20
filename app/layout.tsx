@@ -25,6 +25,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap"
           rel="stylesheet"
         />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href={`data:image/svg+xml;utf8,${encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#0A0A0A"/><text x="16" y="22" font-family="JetBrains Mono,monospace" font-size="18" font-weight="700" fill="#FFB000" text-anchor="middle">XE</text></svg>'
+          )}`}
+        />
       </head>
       <body>{children}</body>
     </html>
