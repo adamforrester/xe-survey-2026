@@ -115,7 +115,9 @@ export default function Page() {
         setHelpOpen(true);
         return;
       }
-      if (e.key === "Escape" && !helpOpen && !fallback && !isEditable) {
+      // Escape always opens fallback — even from inside an input. Without this,
+      // the survey traps focus in inputs the whole time, making Esc unreachable.
+      if (e.key === "Escape" && !helpOpen && !fallback) {
         e.preventDefault();
         setFallback(true);
       }
@@ -152,8 +154,10 @@ export default function Page() {
   }
 
   if (fallback) {
+    // h-screen + overflow-y-auto because body has overflow:hidden for the
+    // terminal experience — without an internal scroller, the long form clips.
     return (
-      <main className="min-h-screen bg-terminal-bg text-phosphor">
+      <main className="h-screen overflow-y-auto bg-terminal-bg text-phosphor">
         <StandardForm initial={answers} onCancel={() => setFallback(false)} />
       </main>
     );

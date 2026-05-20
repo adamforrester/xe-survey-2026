@@ -58,9 +58,21 @@ export function StandardForm({ initial, onCancel }: StandardFormProps) {
     );
   }
 
+  // Block implicit form submission: pressing Enter inside a single-line
+  // <input> would otherwise submit the whole form before the user has
+  // scrolled past the first few questions. Textareas keep their normal
+  // Enter-for-newline behavior; the explicit Submit button still works.
+  function blockImplicitSubmit(e: React.KeyboardEvent<HTMLFormElement>) {
+    const target = e.target as HTMLElement;
+    if (e.key === "Enter" && target.tagName !== "TEXTAREA") {
+      e.preventDefault();
+    }
+  }
+
   return (
     <form
       onSubmit={onSubmit}
+      onKeyDown={blockImplicitSubmit}
       className="max-w-2xl mx-auto p-4 sm:p-6 space-y-6 text-phosphor"
     >
       <header className="flex items-center justify-between">
