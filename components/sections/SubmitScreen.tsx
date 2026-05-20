@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProcessLog } from "../terminal/ProcessLog";
 import { TypewriterText } from "../terminal/TypewriterText";
 import { Cursor } from "../terminal/Cursor";
+import { MatrixRain } from "../terminal/MatrixRain";
 import { sound } from "@/lib/sound-manager";
 import { submitSurvey } from "@/lib/submit";
 import type { SurveyAnswers } from "@/lib/survey-schema";
@@ -20,7 +21,7 @@ const COMPILE_LINES = [
   "broadcasting handshake",
 ];
 
-type Phase = "compile" | "submitting" | "success" | "error";
+type Phase = "compile" | "submitting" | "rain" | "success" | "error";
 
 export function SubmitScreen({ answers, onRestart }: SubmitScreenProps) {
   const [phase, setPhase] = useState<Phase>("compile");
@@ -35,7 +36,7 @@ export function SubmitScreen({ answers, onRestart }: SubmitScreenProps) {
       if (cancelled) return;
       if (res.ok) {
         sound.play("modem-sync");
-        setPhase("success");
+        setPhase("rain");
       } else {
         setError(res.error);
         sound.play("beep-error");
@@ -82,18 +83,28 @@ export function SubmitScreen({ answers, onRestart }: SubmitScreenProps) {
         </div>
       )}
 
+      {phase === "rain" && (
+        <div className="space-y-3 pt-2">
+          <div className="text-phosphor-ok">[ok] handshake complete · joining mesh</div>
+          <MatrixRain onDone={() => setPhase("success")} />
+        </div>
+      )}
+
       {phase === "success" && (
         <div className="space-y-2">
-          <div className="text-phosphor-ok">[ok] profile synced</div>
-          <div className="text-phosphor">
+          <div className="text-phosphor-ok">[ok] profile synced · node online</div>
+          <div className="text-phosphor-bright">
             <TypewriterText
-              text="welcome to XE, operative."
+              text="welcome to the XE network, operative."
               speed={32}
               jitter={14}
             />
           </div>
           <div className="text-phosphor-dim text-sm pt-2">
-            you can close this terminal. your responses are recorded.
+            your signal is added to the mesh. honest answers, well received.
+          </div>
+          <div className="text-phosphor-dim text-sm">
+            you can close this terminal. responses are recorded.
           </div>
           <div className="pt-3">
             <button

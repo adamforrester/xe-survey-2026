@@ -13,6 +13,9 @@ next-env.d.ts
 e2e-success.png
 *-mobile.png
 
+# Reference-only animation artifacts (CC BY-NC-SA, not shippable)
+animations/
+
 # Per-user Claude permissions (paths are local)
 .claude/settings.local.json
 
