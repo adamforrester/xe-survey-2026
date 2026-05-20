@@ -114,6 +114,20 @@ export function InterSection({
           />
         </div>
       </form>
+      <div className="pt-1">
+        <button
+          type="button"
+          onClick={() => {
+            if (performance.now() - mountedAt.current < 220) return;
+            sound.play("key-enter");
+            onContinue();
+          }}
+          className="text-phosphor-dim hover:text-phosphor-bright text-xs underline-offset-2 underline cursor-pointer"
+          aria-label="continue to next section"
+        >
+          tap to continue ▸
+        </button>
+      </div>
     </div>
   );
 }

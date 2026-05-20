@@ -29,12 +29,14 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
     }
   }, [phase]);
 
+  const firedRef = useRef(false);
+
   useEffect(() => {
     if (phase !== "press-any") return;
     const mountedAt = performance.now();
-    let fired = false;
+    firedRef.current = false;
     function onKey(e: KeyboardEvent) {
-      if (fired) return;
+      if (firedRef.current) return;
       if (e.key === "Enter" && performance.now() - mountedAt < 150) return;
       if (
         e.key === "Enter" ||
@@ -43,7 +45,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
         e.key === "ArrowRight"
       ) {
         e.preventDefault();
-        fired = true;
+        firedRef.current = true;
         window.removeEventListener("keydown", onKey);
         sound.play("key-enter");
         onComplete();
@@ -52,6 +54,13 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, onComplete]);
+
+  function handleBeginTap() {
+    if (phase !== "press-any" || firedRef.current) return;
+    firedRef.current = true;
+    sound.play("key-enter");
+    onComplete();
+  }
 
   return (
     <div className="space-y-3">
@@ -140,10 +149,15 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
           <div className="pt-3 text-phosphor-dim text-sm">
             takes about 10 minutes. honest answers beat polished ones.
           </div>
-          <div className="pt-2 flex items-center gap-2">
-            <span className="text-phosphor-bright">press enter to begin</span>
+          <button
+            type="button"
+            onClick={handleBeginTap}
+            className="mt-2 inline-flex items-center gap-2 border border-phosphor/40 bg-transparent px-3 py-2 text-phosphor-bright hover:bg-phosphor/10 focus:outline-none focus:ring-1 focus:ring-phosphor cursor-pointer"
+            aria-label="Begin survey"
+          >
+            <span>press enter / tap to begin</span>
             <Cursor />
-          </div>
+          </button>
         </>
       )}
     </div>

@@ -43,6 +43,16 @@ export function TextInput({
     onSubmit(value.trim());
   }
 
+  function tapSubmit() {
+    if (submitted.current) return;
+    if (performance.now() - mountedAt.current < 220) return;
+    if (!optional && !value.trim()) {
+      sound.play("beep-error");
+      return;
+    }
+    commit();
+  }
+
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter") {
       if (performance.now() - mountedAt.current < 200) {
@@ -112,6 +122,14 @@ export function TextInput({
           [optional · enter to skip]
         </span>
       )}
+      <button
+        type="button"
+        onClick={tapSubmit}
+        className="text-phosphor-bright text-sm border border-phosphor/40 hover:bg-phosphor/10 px-2 py-0.5 cursor-pointer focus:outline-none focus:ring-1 focus:ring-phosphor whitespace-nowrap"
+        aria-label="submit"
+      >
+        ▸
+      </button>
     </div>
   );
 }

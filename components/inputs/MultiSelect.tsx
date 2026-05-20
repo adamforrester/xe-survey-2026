@@ -161,6 +161,23 @@ export function MultiSelect({
       <div className="text-phosphor-dim text-xs pt-2">
         ↑/↓ to move · space to toggle · enter to confirm
       </div>
+      <button
+        type="button"
+        onClick={() => {
+          if (selected.size === 0) {
+            sound.play("beep-error");
+            setErrorFlash(true);
+            setTimeout(() => setErrorFlash(false), 600);
+            return;
+          }
+          sound.play("key-enter");
+          onSubmit(Array.from(selected), otherText || undefined);
+        }}
+        className="mt-2 inline-flex items-center gap-2 border border-phosphor/40 bg-transparent px-3 py-1 text-phosphor-bright hover:bg-phosphor/10 focus:outline-none focus:ring-1 focus:ring-phosphor cursor-pointer text-sm"
+        aria-label="confirm selection"
+      >
+        confirm ▸
+      </button>
     </div>
   );
 }

@@ -106,6 +106,24 @@ export function RatingTable({
     return () => clearTimeout(t);
   }, [sweep, rows, values, onSubmit]);
 
+  function setRating(rowId: string, n: Rating) {
+    setValues((v) => ({ ...v, [rowId]: n }));
+    sound.playKeystroke();
+  }
+
+  function submitTap() {
+    if (sweep) return;
+    setValues((v) => {
+      const filled = { ...v };
+      for (const row of rows) {
+        if (filled[row.id] === undefined) filled[row.id] = 3 as Rating;
+      }
+      return filled;
+    });
+    sound.play("key-enter");
+    setSweep(true);
+  }
+
   return (
     <div role="group" aria-label={ariaLabel} className="space-y-2">
       <div className="text-phosphor-dim text-xs">{legend}</div>
@@ -119,6 +137,7 @@ export function RatingTable({
               className={`flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 px-2 py-1 ${
                 isActive ? "bg-phosphor-dimmer/40" : ""
               }`}
+              onClick={() => !sweep && setActiveRow(i)}
             >
               <div className="flex-1 min-w-0">
                 <span className={isActive ? "text-phosphor-bright" : "text-phosphor"}>
@@ -131,6 +150,12 @@ export function RatingTable({
                   value={sweep ? (values[row.id] ?? 3) : v}
                   active={isActive}
                   sweepIndex={sweep ? i : -1}
+                  disabled={sweep}
+                  onPick={(n) => {
+                    if (sweep) return;
+                    setActiveRow(i);
+                    setRating(row.id, n);
+                  }}
                 />
                 <span className="text-phosphor-dim text-xs w-6 text-right tabular-nums">
                   {v ? `${v}/5` : "—"}
@@ -144,6 +169,15 @@ export function RatingTable({
         ←/→ or 1–5 to set · ↑/↓ to move · enter to advance ·{" "}
         {sweep ? "calibrating..." : `${activeRow + 1}/${rows.length}`}
       </div>
+      <button
+        type="button"
+        onClick={submitTap}
+        disabled={sweep}
+        className="mt-2 inline-flex items-center gap-2 border border-phosphor/40 bg-transparent px-3 py-1 text-phosphor-bright hover:bg-phosphor/10 focus:outline-none focus:ring-1 focus:ring-phosphor cursor-pointer text-sm disabled:opacity-50"
+        aria-label="confirm ratings"
+      >
+        confirm ratings ▸
+      </button>
     </div>
   );
 }
@@ -152,26 +186,39 @@ function RatingBar({
   value,
   active,
   sweepIndex,
+  disabled,
+  onPick,
 }: {
   value: number;
   active: boolean;
   sweepIndex: number;
+  disabled?: boolean;
+  onPick?: (n: Rating) => void;
 }) {
-  const cells = [1, 2, 3, 4, 5];
+  const cells: Rating[] = [1, 2, 3, 4, 5];
   return (
-    <div className="flex gap-0.5" aria-hidden="true">
+    <div className="flex gap-0.5">
       {cells.map((n) => {
         const filled = value >= n;
         return (
-          <span
+          <button
             key={n}
-            className={`inline-block w-3 sm:w-4 h-3 sm:h-4 border ${
+            type="button"
+            disabled={disabled}
+            onClick={(e) => {
+              e.stopPropagation();
+              onPick?.(n);
+            }}
+            aria-label={`set rating ${n}`}
+            className={`inline-block w-5 sm:w-4 h-5 sm:h-4 border ${
               filled
                 ? active
                   ? "bg-phosphor-bright border-phosphor-bright"
                   : "bg-phosphor border-phosphor"
-                : "border-phosphor-dimmer"
-            } ${sweepIndex >= 0 ? "transition-colors duration-150" : ""}`}
+                : "border-phosphor-dimmer hover:border-phosphor"
+            } ${sweepIndex >= 0 ? "transition-colors duration-150" : ""} ${
+              disabled ? "" : "cursor-pointer"
+            }`}
           />
         );
       })}
