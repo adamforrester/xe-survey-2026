@@ -29,10 +29,10 @@ export function QuestionFrame({
   }, [prompt, awaitInput]);
 
   return (
-    <div className="space-y-2 mt-3">
+    <div className="space-y-3 mt-6">
       <div className="flex flex-wrap gap-x-2">
         <span className="text-phosphor-dim">[{number}]</span>
-        <span className="flex-1 min-w-0">
+        <span className="flex-1 min-w-0 text-phosphor-bright">
           <TypewriterText
             text={prompt}
             speed={22}
@@ -44,7 +44,7 @@ export function QuestionFrame({
       {hint && ready && (
         <div className="text-phosphor-dim text-xs pl-9">{hint}</div>
       )}
-      {ready && <div className="pt-1">{children}</div>}
+      {ready && <div className="pt-2">{children}</div>}
     </div>
   );
 }

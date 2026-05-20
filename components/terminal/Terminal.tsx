@@ -27,11 +27,11 @@ export function Terminal({ children }: TerminalProps) {
   return (
     <div
       ref={scrollRef}
-      className="terminal-scroll flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6"
+      className="terminal-scroll flex-1 overflow-y-auto px-3 sm:px-6 pt-4 sm:pt-6 pb-24 sm:pb-32"
     >
       <div
         ref={innerRef}
-        className="max-w-3xl mx-auto text-[13px] sm:text-[15px] leading-relaxed phosphor-glow space-y-3"
+        className="max-w-3xl mx-auto text-[13px] sm:text-[15px] leading-relaxed phosphor-glow space-y-6"
       >
         {children}
       </div>

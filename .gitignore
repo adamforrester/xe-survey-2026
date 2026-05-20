@@ -11,6 +11,7 @@ next-env.d.ts
 # E2E verification artifacts
 .playwright-mcp/
 e2e-success.png
+*-mobile.png
 
 # Per-user Claude permissions (paths are local)
 .claude/settings.local.json

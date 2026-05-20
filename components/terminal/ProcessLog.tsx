@@ -55,10 +55,24 @@ export function ProcessLog({
   }, []);
 
   return (
-    <div className="text-phosphor-dim space-y-0.5">
-      {shown.map((line, i) => (
-        <div key={i}>{line}</div>
-      ))}
+    <div className="space-y-0.5">
+      {shown.map((line, i) => {
+        const okIdx = line.lastIndexOf("... ok");
+        if (okIdx > -1) {
+          return (
+            <div key={i} className="text-phosphor-dim">
+              {line.slice(0, okIdx)}
+              <span className="text-phosphor-dim">... </span>
+              <span className="text-phosphor-ok">ok</span>
+            </div>
+          );
+        }
+        return (
+          <div key={i} className="text-phosphor-dim">
+            {line}
+          </div>
+        );
+      })}
     </div>
   );
 }

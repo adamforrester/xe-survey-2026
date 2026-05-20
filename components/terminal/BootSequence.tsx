@@ -63,7 +63,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       <pre className="text-phosphor-bright phosphor-glow leading-tight text-[11px] sm:text-[13px] whitespace-pre">
         {XE_LOGO}
       </pre>
@@ -100,11 +100,11 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
       )}
       {phase === "load-list" && (
         <>
-          <div className="text-phosphor-dim space-y-0.5">
-            <div>mounting /xe/capabilities... ok</div>
-            <div>loading skill registry... ok</div>
-            <div>establishing uplink... ok</div>
-            <div>spinning up intake daemon... ok</div>
+          <div className="space-y-0.5">
+            <OkLine>mounting /xe/capabilities</OkLine>
+            <OkLine>loading skill registry</OkLine>
+            <OkLine>establishing uplink</OkLine>
+            <OkLine>spinning up intake daemon</OkLine>
           </div>
           <ProcessLog
             lines={[
@@ -118,13 +118,13 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
       )}
       {phase === "ready-line" && (
         <>
-          <div className="text-phosphor-dim space-y-0.5">
-            <div>mounting /xe/capabilities... ok</div>
-            <div>loading skill registry... ok</div>
-            <div>establishing uplink... ok</div>
-            <div>spinning up intake daemon... ok</div>
-            <div>checking auth (vibes-based)... ok</div>
-            <div>ready... ok</div>
+          <div className="space-y-0.5">
+            <OkLine>mounting /xe/capabilities</OkLine>
+            <OkLine>loading skill registry</OkLine>
+            <OkLine>establishing uplink</OkLine>
+            <OkLine>spinning up intake daemon</OkLine>
+            <OkLine>checking auth (vibes-based)</OkLine>
+            <OkLine>ready</OkLine>
           </div>
           <div className="pt-2">
             <TypewriterText
@@ -137,13 +137,13 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
       )}
       {phase === "press-any" && (
         <>
-          <div className="text-phosphor-dim space-y-0.5">
-            <div>mounting /xe/capabilities... ok</div>
-            <div>loading skill registry... ok</div>
-            <div>establishing uplink... ok</div>
-            <div>spinning up intake daemon... ok</div>
-            <div>checking auth (vibes-based)... ok</div>
-            <div>ready... ok</div>
+          <div className="space-y-0.5">
+            <OkLine>mounting /xe/capabilities</OkLine>
+            <OkLine>loading skill registry</OkLine>
+            <OkLine>establishing uplink</OkLine>
+            <OkLine>spinning up intake daemon</OkLine>
+            <OkLine>checking auth (vibes-based)</OkLine>
+            <OkLine>ready</OkLine>
           </div>
           <div className="pt-2">welcome, operative. this is the XE intake terminal.</div>
           <div className="pt-3 text-phosphor-dim text-sm">
@@ -160,6 +160,16 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
           </button>
         </>
       )}
+    </div>
+  );
+}
+
+function OkLine({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-phosphor-dim">
+      {children}
+      <span>... </span>
+      <span className="text-phosphor-ok">ok</span>
     </div>
   );
 }

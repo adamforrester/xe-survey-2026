@@ -37,7 +37,7 @@ export function SectionHeader({
   }, [phase, loadingLines.length]);
 
   return (
-    <div className="space-y-2 border-l-2 border-phosphor-dim pl-3 py-1">
+    <div className="space-y-2 border-l-2 border-phosphor-ok pl-4 py-2 mt-8">
       <PromptLine
         command={command}
         flag={flag}
@@ -59,7 +59,7 @@ export function SectionHeader({
           />
         )}
       {(phase === "title" || phase === "ready") && (
-        <div className="text-phosphor-bright pt-1">// {title}</div>
+        <div className="text-phosphor-bright pt-2 text-base sm:text-lg">// {title}</div>
       )}
     </div>
   );
